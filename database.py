@@ -38,6 +38,7 @@ class database:
           cond = self.existence.check_existence(table_list, table_name)
           if cond == True:
                print(table_name, "table already exists")
+               print("========================LIST OF COLUMNS IN "+table_name+" TABLE========================")
                cursor.execute("DESCRIBE "+table_name)
                structure = cursor.fetchall()
                print([item[0] for item in structure])
@@ -48,9 +49,14 @@ class database:
                create_table_query = input(f'Enter your query to create structure of {table_name} table:: \n')
                self.existence.create_table_query(conn, table_name, create_table_query)
      
-     def insert_into_table(self, sql):
+     def insert_into_table(self, count, table_name):
           cursor = conn.cursor()
-          cursor.execute(sql)
+          for i in range(0,count):
+               sql = "INSERT INTO "+table_name+" (fname, mname, lname, address, contact, dob) VALUES (%s, %s, %s, %s, %s, %s)"
+               val = ("Chitra", "Maya", "Bhandari", "Butwal", "9840194068", "1966-09-02")
+               cursor.execute(sql, val)
+               print(cursor.rowcount+i, "record inserted")
+               
           conn.commit()
      
      class existence:
@@ -93,10 +99,10 @@ if __name__ == '__main__':
      CREATE TABLE bhandari(id INT NOT NULL AUTO_INCREMENT, fname VARCHAR(45) NOT NULL, mname VARCHAR(45) NULL, lname VARCHAR(45) NOT NULL, address VARCHAR(45) NOT NULL, contact VARCHAR(45) NOT NULL, dob DATETIME NOT NULL, PRIMARY KEY (id));
      """
      obj.create_table(conn, table_name)
-     sql = input(f'Enter your insert query to insert data into {table_name} table:: \n')
+     count = int(input(f'How many data do you want to insert into {table_name} table:: \n'))
      """
      INSERT INTO bhandari(fname, mname, lname, address, contact, dob) VALUES ("Keshav", "", "Bhandari", "Butwal", "9869260495", "1999-08-10")
      """
-     obj.insert_into_table(sql)
+     obj.insert_into_table(count, table_name)
      
     
